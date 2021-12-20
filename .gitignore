@@ -1,2 +1,15 @@
+# cache
 __pycache__/
+
+# saved files
 files/
+
+# ><
+captcha_check.py
+
+# private shutdown key
+keys.py
+
+# dbs
+searches.bin
+files.db

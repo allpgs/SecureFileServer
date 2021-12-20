@@ -1,13 +1,15 @@
 <html>
     <head>
         <title>Secure File Upload</title>
+        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     </head>
     <body>
         <h3>당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</h3>
-        <form action="/post" method="post" enctype="multipart/form-data">
+        <form action="/post" method="post" id="form" enctype="multipart/form-data">
             <input type="file" name="file" />
             <input type="text" maxlength="16" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" />
-            <input type="submit" value="GO!">
+            <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
+            <input type="submit" value="Go!">
         </form>
     </body>
 </html>

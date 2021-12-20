@@ -1,11 +1,13 @@
 <html>
     <head>
         <title>File: {{--File--}}</title>
+        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     </head>
     <body>
-        <h2>파일 {{--File--}}의 비밀번호를 입력하세요.</h2>
+        <h2>파일 {{--File--}}의 비밀번호를 입력하세요. ({{--Searches--}})</h2>
         <form action="/{{--File--}}" method="post">
             <input type="text" maxlength="16" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" />
+            <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
             <input type="submit" value="복호화">
         </form>
     </body>

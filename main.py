@@ -4,10 +4,13 @@ from tools import *
 from config import *
 import aiofiles
 from os import path
-from io import BytesIO
+from captcha_check import captcha_check
+from ext.FileManager import FileManager as fm
+import sys
 
 app = web.Application()
 routes = web.RouteTableDef()
+FileManager = fm()
 
 HTTPBadRequest = web.HTTPBadRequest(text="Bad Request")
 with open("./html/form.html", "r", encoding="utf-8") as f:
@@ -26,8 +29,20 @@ async def get_file(request: web.Request):
     if file_name == "None":
         return HTTPBadRequest
     
+    if file_name == shutdown_key:
+        print("Server Shutdown command received. Shutting down...")
+        await FileManager.delete_expired()
+        await app.shutdown()
+        await app.cleanup()
+        print("End.")
+        sys.exit(0)
+    
     if path.exists(f"./files/{file_name}"):
-        return web.Response(text=dec_html.replace("{{--File--}}", file_name), content_type="text/html")
+        return web.Response(
+            text=dec_html
+                .replace("{{--File--}}", file_name)
+                .replace("{{--Searches--}}", str(FileManager.get_seaches(file_name))), 
+            content_type="text/html")
     else:
         return web.HTTPNotFound(text="404 Not Found.")
 
@@ -49,12 +64,16 @@ async def post_file(request: web.Request):
 
     try:
         data["password"]
+        data["h-captcha-response"]
     except:
         return HTTPBadRequest
     
     password = data["password"]
 
     if not isinstance(password, str) or len(password) > 16 or not is_eng_digits(password):
+        return HTTPBadRequest
+    
+    if not await captcha_check(data["h-captcha-response"]):
         return HTTPBadRequest
     
     password = password_formatter(password)
@@ -68,6 +87,8 @@ async def post_file(request: web.Request):
         decrypted_data = cipher.decrypt_and_verify(ciphertext, tag)
     except:
         return web.HTTPNotAcceptable(text="Password mismatch.")
+    
+    FileManager.add_searches(file_name)
     
     file_type = "application/octet-stream"
     file_ext = file_name.split(".")[-1]
@@ -101,14 +122,16 @@ async def file_upload(request: web.Request):
     try:
         data["file"]
         data["password"]
+        data["h-captcha-response"]
     except:
         return HTTPBadRequest
     
     file = data["file"]
     password = data["password"]
+    captcha_response = data["h-captcha-response"]
 
     
-    if not isinstance(file, web_request.FileField) or not isinstance(password, str):
+    if not isinstance(file, web_request.FileField) or not isinstance(password, str) or not isinstance(captcha_response, str):
         return HTTPBadRequest
 
     if password == "" or len(password) > 16:
@@ -119,10 +142,15 @@ async def file_upload(request: web.Request):
     
     password = password_formatter(password)
 
+
+
     file_bytes = file.file.read()
     file_name = file.filename
 
-    if len(file_bytes) > max_bytes: # 16MB
+    if len(file_bytes) > max_bytes:
+        return HTTPBadRequest
+    
+    if not await captcha_check(captcha_response):
         return HTTPBadRequest
     
     generated_filename = random_string() +"."+ file_name.split(".")[-1]
@@ -138,7 +166,8 @@ async def file_upload(request: web.Request):
     async with aiofiles.open(f"files/{generated_filename}", "wb") as f:
         [ await f.write(x) for x in (cipher.nonce, tag, ciphertext) ]
     
-    return web.Response(text=f"Saved. /{generated_filename}")
+    await FileManager.addfile(generated_filename, IP)
+    return web.Response(text=f"Saved. <a href=\"/{generated_filename}\">/{generated_filename}</a>", content_type="text/html")
     
 
 
