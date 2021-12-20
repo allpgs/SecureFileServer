@@ -4,19 +4,34 @@ from tools import *
 from config import *
 import aiofiles
 from os import path
+import os
 from captcha_check import captcha_check
 from ext.FileManager import FileManager as fm
 import sys
 
-app = web.Application()
+app = web.Application(client_max_size=max_bytes)
 routes = web.RouteTableDef()
 FileManager = fm()
+total_size = 0
 
 HTTPBadRequest = web.HTTPBadRequest(text="Bad Request")
+HTTPSorryTotalSizeLimited = web.HTTPNotAcceptable(text="죄송합니다. 서버에서 설정한 최대 용량을 초과했습니다. 며칠 후 다시 시도해주세요.")
+
 with open("./html/form.html", "r", encoding="utf-8") as f:
     main_html = f.read()
 with open("./html/image_dec_form.html", "r", encoding="utf-8") as f:
     dec_html = f.read()
+
+def add_size(size: int):
+    global total_size
+    total_size += size
+
+def size_boom():
+    return total_size > max_size_limit
+
+[ add_size(path.getsize(f"./files/{filename}")) for filename in os.listdir("./files") ]
+
+print(f"Total size: {round(total_size/1024/1024)}MB")
 
 @routes.get("/")
 async def main_page(request):
@@ -115,6 +130,9 @@ async def post_file(request: web.Request):
 
 @routes.post("/post")
 async def file_upload(request: web.Request):
+    if size_boom():
+        return HTTPSorryTotalSizeLimited
+
     IP = getIp(request)
     
     data = await request.post()
@@ -147,6 +165,8 @@ async def file_upload(request: web.Request):
     file_bytes = file.file.read()
     file_name = file.filename
 
+
+    # Client max size = max_bytes. it probably won't be called. 
     if len(file_bytes) > max_bytes:
         return HTTPBadRequest
     
@@ -165,6 +185,8 @@ async def file_upload(request: web.Request):
     
     async with aiofiles.open(f"files/{generated_filename}", "wb") as f:
         [ await f.write(x) for x in (cipher.nonce, tag, ciphertext) ]
+    
+    add_size(path.getsize(f"./files/{generated_filename}"))
     
     await FileManager.addfile(generated_filename, IP)
     return web.Response(text=f"Saved. <a href=\"/{generated_filename}\">/{generated_filename}</a>", content_type="text/html")
