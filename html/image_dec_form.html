@@ -1,10 +1,13 @@
 <html>
     <head>
+        <meta id="embed-title" property="og:title" content="SecureFileServer">
+        <meta id="embed-desc" property="og:description" content="암호화된 파일 {{--File--}}을 비밀번호로 복호화 하세요. 현재 총 {{--Searches--}}번 다운로드 되었습니다.">
+        <meta name="theme-color" content="#ffffff">
         <title>File: {{--File--}}</title>
         <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     </head>
     <body>
-        <h2>파일 {{--File--}}의 비밀번호를 입력하세요. ({{--Searches--}})</h2>
+        <h2>파일 {{--File--}}의 비밀번호를 입력하세요. ({{--Searches--}} Downloads)</h2>
         <form action="/{{--File--}}" method="post">
             <input type="text" maxlength="16" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" />
             <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
