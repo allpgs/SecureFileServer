@@ -9,6 +9,8 @@ from captcha_check import captcha_check
 from ext.FileManager import FileManager as fm
 import sys
 
+__VERSION__ = "1.1-PreRelease"
+
 app = web.Application(client_max_size=max_bytes)
 routes = web.RouteTableDef()
 FileManager = fm()
@@ -194,4 +196,5 @@ async def file_upload(request: web.Request):
 
 
 app.add_routes(routes)
+print(f"Server Version: {__VERSION__}")
 web.run_app(app, host="0.0.0.0", port=1234)
