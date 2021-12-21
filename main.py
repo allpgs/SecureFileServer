@@ -25,8 +25,10 @@ with open("./html/upload.html", "r", encoding="utf-8") as f:
 with open("./html/error.html", "r", encoding="utf-8") as f:
     error_html = f.read()
 
+HTTPNotFound = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "404 Not Found<br><br>다시 한 번 확인해 주세요! 지금 입력하신 주소의 페이지 혹은 파일은 더 이상 존재하지 않거나 다른 주소로 변경되었어요. 입력한 주소를 다시 한 번 확인해 주세요."), content_type="text/html")
 HTTPBadRequest = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "400 Bad Request<br><br>서버가 이해할 수 없는 요청을 받았습니다. 정상적인 요청인지 확인하시고 다시 시도해 주세요."), content_type="text/html")
 HTTPSorryTotalSizeLimited = web.HTTPNotAcceptable(text=error_html.replace("{{--Error--}}", "죄송합니다. 서버에서 설정한 최대 용량을 초과했습니다. 며칠 후 다시 시도해 주세요."), content_type="text/html")
+HTTPPasswordMismatch = web.HTTPNotAcceptable(text=error_html.replace("{{--Error--}}", "비밀번호가 틀립니다. 올바른 비밀번호인지 확인하시고 다시 시도해 주세요."), content_type="text/html")
 
 def add_size(size: int):
     global total_size
@@ -65,7 +67,7 @@ async def get_file(request: web.Request):
                 .replace("{{--Searches--}}", str(FileManager.get_seaches(file_name))), 
             content_type="text/html")
     else:
-        return web.HTTPNotFound(text="404 Not Found.")
+        return HTTPNotFound
 
 @routes.post("/{file_name}")
 async def post_file(request: web.Request):
@@ -79,7 +81,7 @@ async def post_file(request: web.Request):
         return await file_upload(request)
     
     if not path.exists(f"./files/{file_name}"):
-        return web.HTTPNotFound(text="404 Not Found.")
+        return HTTPNotFound
     
     data = await request.post()
 
@@ -107,7 +109,7 @@ async def post_file(request: web.Request):
     try:
         decrypted_data = cipher.decrypt_and_verify(ciphertext, tag)
     except:
-        return web.HTTPNotAcceptable(text="Password mismatch.")
+        return HTTPPasswordMismatch
     
     FileManager.add_searches(file_name)
     
