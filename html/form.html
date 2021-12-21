@@ -1,18 +1,52 @@
-<html>
-    <head>
-        <meta id="embed-title" property="og:title" content="SecureFileServer">
-        <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스">
-        <meta name="theme-color" content="#ffffff">
-        <title>Secure File Upload</title>
-        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    </head>
-    <body>
-        <h3>당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</h3>
-        <form action="/post" method="post" id="form" enctype="multipart/form-data">
-            <input type="file" name="file" />
-            <input type="text" maxlength="16" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" />
-            <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
-            <input type="submit" value="Go!">
-        </form>
-    </body>
-</html>
+    <div>
+        <Head>
+          <title>Secure File Upload</title>
+          <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
+          <meta id="embed-title" property="og:title" content="Secure File Upload" />
+          <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
+          <meta name="theme-color" content="#ffffff" />
+          <link rel="icon" href="/favicon.ico" />
+  
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css" />
+          <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js"></script>
+  
+          <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+        </Head>
+  
+        <main>
+          <br /><br /><br />
+          <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
+              
+            <h1 class="bold">Secure File Upload</h1>
+            <div class="uk-width-4-5@m uk-margin-auto">
+              <p class="lead bold">당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</p>
+            </div>
+            <div style="margin-top: '80px'"></div>
+            
+            <form action="/post" method="post" id="form" enctype="multipart/form-data">
+              <div class="uk-margin">
+                  <div uk-form-custom="target: true">
+                      <input type="file" name="file"/>
+                      <input class="uk-input uk-form-width-large" type="text" placeholder="Select file" disabled />
+                      <button class="uk-button uk-button-default" type="button" tabIndex="-1">Select</button>
+                  </div>
+              </div>
+  
+              <div style="margin-top: '40px'"></div>
+  
+              <div class="uk-margin">
+                <input class="uk-input uk-form-width-large" type="password" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" autoComplete="off" />
+              </div>
+  
+              <div style="margin-top: '30px'"></div>
+              
+              <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
+  
+              <div style="margin-top: '30px'"></div>
+  
+              <button class="uk-button uk-button-secondary" type="submit">GO!</button>
+            </form>
+          </div>
+        </main>
+      </div>

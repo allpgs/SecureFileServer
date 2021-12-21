@@ -9,7 +9,7 @@ from captcha_check import captcha_check
 from ext.FileManager import FileManager as fm
 import sys
 
-__VERSION__ = "1.1-PreRelease"
+__VERSION__ = "1.1"
 
 app = web.Application(client_max_size=max_bytes)
 routes = web.RouteTableDef()
@@ -23,6 +23,8 @@ with open("./html/form.html", "r", encoding="utf-8") as f:
     main_html = f.read()
 with open("./html/image_dec_form.html", "r", encoding="utf-8") as f:
     dec_html = f.read()
+with open("./html/upload.html", "r", encoding="utf-8") as f:
+    uploaded_html = f.read()
 
 def add_size(size: int):
     global total_size
@@ -191,7 +193,7 @@ async def file_upload(request: web.Request):
     add_size(path.getsize(f"./files/{generated_filename}"))
     
     await FileManager.addfile(generated_filename, IP)
-    return web.Response(text=f"Saved. <a href=\"/{generated_filename}\">/{generated_filename}</a>", content_type="text/html")
+    return web.Response(text=uploaded_html.replace("{{--File--}}", generated_filename), content_type="text/html")
     
 
 
