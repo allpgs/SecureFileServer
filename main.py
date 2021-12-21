@@ -16,15 +16,17 @@ routes = web.RouteTableDef()
 FileManager = fm()
 total_size = 0
 
-HTTPBadRequest = web.HTTPBadRequest(text="Bad Request")
-HTTPSorryTotalSizeLimited = web.HTTPNotAcceptable(text="죄송합니다. 서버에서 설정한 최대 용량을 초과했습니다. 며칠 후 다시 시도해주세요.")
-
 with open("./html/form.html", "r", encoding="utf-8") as f:
     main_html = f.read()
 with open("./html/image_dec_form.html", "r", encoding="utf-8") as f:
     dec_html = f.read()
 with open("./html/upload.html", "r", encoding="utf-8") as f:
     uploaded_html = f.read()
+with open("./html/error.html", "r", encoding="utf-8") as f:
+    error_html = f.read()
+
+HTTPBadRequest = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "400 Bad Request<br><br>서버가 이해할 수 없는 요청을 받았습니다. 정상적인 요청인지 확인하시고 다시 시도해 주세요."), content_type="text/html")
+HTTPSorryTotalSizeLimited = web.HTTPNotAcceptable(text=error_html.replace("{{--Error--}}", "죄송합니다. 서버에서 설정한 최대 용량을 초과했습니다. 며칠 후 다시 시도해 주세요."), content_type="text/html")
 
 def add_size(size: int):
     global total_size
