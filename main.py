@@ -8,9 +8,6 @@ from os import path
 import os
 from captcha_check import captcha_check
 from ext.FileManager import FileManager as fm
-import sys
-import threading
-from time import sleep
 
 __VERSION__ = "1.1.4"
 
