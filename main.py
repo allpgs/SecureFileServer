@@ -30,10 +30,8 @@ with open("./html/error.html", "r", encoding="utf-8") as f:
 
 def HtmlCacheThread():
     global main_html
-    main_html = _main_html.replace("{{--TotalDownloads--}}", str(FileManager.total_searches())).replace("{{--TotalFileAmount--}}", str(len(os.listdir("./files")))).replace("{{--TotalSize--}}", str(round(total_size/1024/1024)))
+    main_html = _main_html.replace("{{--TotalDownloads--}}", FileManager.total_searches_str()).replace("{{--TotalFileAmount--}}", str(len(os.listdir("./files")))).replace("{{--TotalSize--}}", str(round(total_size/1024/1024)))
     sleep(60)
-
-threading.Thread(target=HtmlCacheThread).start()
 
 HTTPNotFound = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "404 Not Found<br><br>다시 한 번 확인해 주세요! 지금 입력하신 주소의 페이지 혹은 파일은 더 이상 존재하지 않거나 다른 주소로 변경되었어요. 입력한 주소를 다시 한 번 확인해 주세요."), content_type="text/html")
 HTTPBadRequest = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "400 Bad Request<br><br>서버가 이해할 수 없는 요청을 받았습니다. 정상적인 요청인지 확인하시고 다시 시도해 주세요."), content_type="text/html")
@@ -48,6 +46,10 @@ def size_boom():
     return total_size > max_size_limit
 
 [ add_size(path.getsize(f"./files/{filename}")) for filename in os.listdir("./files") ]
+
+update_thread = threading.Thread(target=HtmlCacheThread)
+update_thread.setDaemon(True)
+update_thread.start()
 
 print(f"Total size: {round(total_size/1024/1024)}MB")
 
@@ -69,8 +71,9 @@ async def get_file(request: web.Request):
         await FileManager.delete_expired()
         await app.shutdown()
         await app.cleanup()
+
         print("End.")
-        sys.exit(0)
+        return web.Response(text="Server Shutdown command received. Shutting down...", content_type="text/html")
     
     if path.exists(f"./files/{file_name}"):
         return web.Response(

@@ -23,8 +23,10 @@ class FileManager:
             except:
                 remove("./searches.bin")
 
-        for filename, downloads in self.search_amount:
+        for downloads in self.search_amount.values():
+            print(downloads)
             self.total_downloads += downloads
+            print(self.total_downloads)
     
         if not path.exists("./files.db"):
             self.db = await aiosqlite.connect("files.db")
@@ -86,3 +88,6 @@ class FileManager:
     
     def total_searches(self) -> int:
         return self.total_downloads
+    
+    def total_searches_str(self) -> str:
+        return str(self.total_downloads) if self.total_downloads > 0 else "측정 중입니다."
