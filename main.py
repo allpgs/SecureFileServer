@@ -8,8 +8,10 @@ import os
 from captcha_check import captcha_check
 from ext.FileManager import FileManager as fm
 import sys
+import threading
+from time import sleep
 
-__VERSION__ = "1.1.3"
+__VERSION__ = "1.1.4"
 
 app = web.Application(client_max_size=max_bytes)
 routes = web.RouteTableDef()
@@ -17,13 +19,21 @@ FileManager = fm()
 total_size = 0
 
 with open("./html/form.html", "r", encoding="utf-8") as f:
-    main_html = f.read()
+    _main_html = f.read()
+    main_html = _main_html
 with open("./html/image_dec_form.html", "r", encoding="utf-8") as f:
     dec_html = f.read()
 with open("./html/upload.html", "r", encoding="utf-8") as f:
     uploaded_html = f.read()
 with open("./html/error.html", "r", encoding="utf-8") as f:
     error_html = f.read()
+
+def HtmlCacheThread():
+    global main_html
+    main_html = _main_html.replace("{{--TotalDownloads--}}", str(FileManager.total_searches())).replace("{{--TotalFileAmount--}}", str(len(os.listdir("./files")))).replace("{{--TotalSize--}}", str(round(total_size/1024/1024)))
+    sleep(60)
+
+threading.Thread(target=HtmlCacheThread).start()
 
 HTTPNotFound = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "404 Not Found<br><br>다시 한 번 확인해 주세요! 지금 입력하신 주소의 페이지 혹은 파일은 더 이상 존재하지 않거나 다른 주소로 변경되었어요. 입력한 주소를 다시 한 번 확인해 주세요."), content_type="text/html")
 HTTPBadRequest = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "400 Bad Request<br><br>서버가 이해할 수 없는 요청을 받았습니다. 정상적인 요청인지 확인하시고 다시 시도해 주세요."), content_type="text/html")
@@ -43,7 +53,9 @@ print(f"Total size: {round(total_size/1024/1024)}MB")
 
 @routes.get("/")
 async def main_page(request):
-    return web.Response(text=main_html, content_type="text/html")
+    return web.Response(
+        text=main_html,
+        content_type="text/html")
 
 @routes.get("/{file_name}")
 async def get_file(request: web.Request):

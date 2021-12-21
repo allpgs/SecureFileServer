@@ -12,6 +12,7 @@ class FileManager:
         self.ready = False
         self.files = {}
         self.search_amount = {}
+        self.total_downloads = 0
         asyncio.get_event_loop().create_task(self.setup())
     
     async def setup(self):
@@ -21,6 +22,9 @@ class FileManager:
                     self.search_amount = pickle.loads(await f.read())
             except:
                 remove("./searches.bin")
+
+        for filename, downloads in self.search_amount:
+            self.total_downloads += downloads
     
         if not path.exists("./files.db"):
             self.db = await aiosqlite.connect("files.db")
@@ -76,5 +80,9 @@ class FileManager:
         return self.search_amount[filename] if self.search_amount.__contains__(filename) else 0
     
     def add_searches(self, filename) -> int:
+        self.total_downloads += 1
         self.search_amount[filename] = self.search_amount[filename] + 1 if self.search_amount.__contains__(filename) else 1
         return self.search_amount[filename]
+    
+    def total_searches(self) -> int:
+        return self.total_downloads
