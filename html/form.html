@@ -1,52 +1,127 @@
-    <div>
-        <Head>
-          <title>Secure File Upload</title>
-          <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 무료 오픈소스 파일 암호화 서비스" />
-          <meta id="embed-title" property="og:title" content="Secure File Upload" />
-          <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 무료 오픈소스 파일 암호화 서비스" />
-          <meta name="theme-color" content="#ffffff" />
-          <link rel="icon" href="/favicon.ico" />
-  
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css" />
-          <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js"></script>
-  
-          <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-        </Head>
-  
-        <main>
-          <br /><br /><br />
-          <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
-              
-            <h1 class="bold">Secure File Upload</h1>
-            <div class="uk-width-4-5@m uk-margin-auto">
-              <p class="lead bold">당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</p>
-            </div>
-            <div style="margin-top: '80px'"></div>
-            
-            <form action="/post" method="post" id="form" enctype="multipart/form-data">
-              <div class="uk-margin">
-                  <div uk-form-custom="target: true">
-                      <input type="file" name="file"/>
-                      <input class="uk-input uk-form-width-large" type="text" placeholder="Select file" disabled />
-                      <button class="uk-button uk-button-default" type="button" tabIndex="-1">Select</button>
-                  </div>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <title>Secure File Upload</title>
+    <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 무료 오픈소스 파일 암호화 서비스" />
+    <meta id="embed-title" property="og:title" content="Secure File Upload" />
+    <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 무료 오픈소스 파일 암호화 서비스" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js"></script>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
+      @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+
+      @font-face {
+          font-family: 'NanumSquareRound';
+          src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+      }
+
+      * { 
+        font-family: 'NanumSquare'; 
+      }
+
+      .notosanskr,
+      .notosanskr * { 
+      font-family: 'Noto Sans KR', sans-serif !important;
+      }
+
+      .nanumsquareround,
+      .nanumsquareround * { 
+        font-family: 'NanumSquareRound' !important; 
+      }
+
+      .nanumsquare,
+      .nanumsquare * { 
+        font-family: 'NanumSquare' !important; 
+      }
+      
+      ::-moz-selection {
+        color: #000000;
+        background: #F0F8FF;
+      }
+
+      ::selection {
+        color: #000000;
+        background: #F0F8FF;
+      }
+
+      .heart {
+        color: #e25555;
+      }
+
+      .bold {
+        font-weight: 500;
+      }
+    </style>
+
+    <script src="https://js.hcaptcha.com/1/api.js?recaptchacompat=off" async defer></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <main>
+      <br /><br /><br />
+      <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
+          
+        <h1 class="bold">Secure File Upload</h1>
+        <div class="uk-width-4-5@m uk-margin-auto">
+          <p class="lead bold">당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</p>
+        </div>
+        <div style="margin-top: 80px;"></div>
+        
+        <form action="/post" method="post" id="form" enctype="multipart/form-data" onsubmit="captcha_check()">
+          <div class="uk-margin">
+              <div uk-form-custom="target: true">
+                  <input type="file" name="file" required/>
+                  <input class="uk-input uk-form-width-large" type="text" placeholder="Select file" disabled />
+                  <button class="uk-button uk-button-default" type="button" tabIndex="-1">Select</button>
               </div>
-  
-              <div style="margin-top: '40px'"></div>
-  
-              <div class="uk-margin">
-                <input class="uk-input uk-form-width-large" type="password" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" autoComplete="off" />
-              </div>
-  
-              <div style="margin-top: '30px'"></div>
-              
-              <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
-  
-              <div style="margin-top: '30px'"></div>
-  
-              <button class="uk-button uk-button-secondary" type="submit">GO!</button>
-            </form>
           </div>
-        </main>
+
+          <div style="margin-top: 40px;"></div>
+
+          <div class="uk-margin">
+            <input class="uk-input uk-form-width-large notosanskr" type="password" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" autoComplete="off" required />
+          </div>
+
+          <div style="margin-top: 30px;"></div>
+          
+          <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
+
+          <div style="margin-top: 30px;"></div>
+
+          <button class="uk-button uk-button-secondary" type="submit">GO!</button>
+        </form>
       </div>
+    </main>
+
+    <footer>
+      <br/><br/>
+      <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
+        <div class="uk-width-4-5@m uk-margin-auto">
+          <span class="uk-text-small uk-text-center">Backend with <span class="heart">❤</span> in <a href="https://vfnets.com">FSanchir</span></a></span> | 
+          <span class="uk-text-small uk-text-center">Frontend with <span class="heart">❤</span> in <a href="https://sskate.me">SSKATE</span></a></span>
+        </div>
+    </footer>
+
+    <script>
+      function captcha_check() {
+        if (document.body.querySelector('#form textarea').value != '') {
+          document.body.querySelector("#form").submit();
+        } else {
+          event.preventDefault();
+          Swal.fire({
+            text: '캡챠를 진행하지 않았습니다.\n캡챠를 진행해 주시기 바랍니다.',
+            icon: 'error'
+          })
+        }
+      }
+    </script>
+  </body>
+</html>

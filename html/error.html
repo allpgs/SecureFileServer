@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <title>{{--File--}} 파일 복호화 : Secure File Upload</title>
-    <meta name="description" content="파일 복호화: {{--File--}}\n관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
-    <meta id="embed-title" property="og:title" content="파일 복호화 : Secure File Upload" />
-    <meta id="embed-desc" property="og:description" content="파일 복호화: {{--File--}}\n관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
+    <title>{{--Error--}} : Secure File Upload</title>
+    <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
+    <meta id="embed-title" property="og:title" content="{{--Error--}} : Secure File Upload" />
+    <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="/favicon.ico" />
 
@@ -41,7 +41,7 @@
       .nanumsquare * { 
         font-family: 'NanumSquare' !important; 
       }
-      
+
       ::-moz-selection {
         color: #000000;
         background: #F0F8FF;
@@ -60,38 +60,23 @@
         font-weight: 500;
       }
     </style>
-
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
   </head>
   <body>
     <main>
       <br /><br /><br />
       <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
-          
         <h1 class="bold">Secure File Upload</h1>
         <div class="uk-width-4-5@m uk-margin-auto">
           <p class="lead bold">당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</p>
         </div>
-        <div style="margin-top: 40px;"></div>
-        <h3 class="headline">
-          파일 {{--File--}}의 비밀번호를 입력하세요. ({{--Searches--}} Downloads)
-        </h3>
-        <div style="margin-top: 40px;"></div>
+        <div style="margin-top: 80px;"></div>
         
-        <form action="/{{--File--}}" method="post">
+        <p class="headline">
+          {{--Error--}}
+        </p>
 
-          <div class="uk-margin">
-            <input class="uk-input uk-form-width-large notosanskr" type="password" placeholder="비밀번호 (서버에도 저장되지 않아 분실 시 복구가 불가능 합니다.)" name="password" autoComplete="off" required />
-          </div>
-
-          <div style="margin-top: 30px;"></div>
-          
-          <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
-
-          <div style="margin-top: 30px;"></div>
-
-          <button class="uk-button uk-button-secondary" type="submit">복호화</button>
-        </form>
+        <div style="margin-top: 80px;"></div>
+        <a href="/" class="uk-button uk-button-secondary">확인</a>
       </div>
     </main>
 
