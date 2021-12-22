@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <title>Secure File Upload</title>
-    <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 무료 오픈소스 파일 암호화 서비스" />
-    <meta id="embed-title" property="og:title" content="Secure File Upload" />
-    <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 무료 오픈소스 파일 암호화 서비스" />
+    <title>서버 점검 중 : Secure File Upload</title>
+    <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
+    <meta id="embed-title" property="og:title" content="서버 점검 중 : Secure File Upload" />
+    <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="/favicon.ico" />
 
@@ -41,7 +41,7 @@
       .nanumsquare * { 
         font-family: 'NanumSquare' !important; 
       }
-      
+
       ::-moz-selection {
         color: #000000;
         background: #F0F8FF;
@@ -60,44 +60,33 @@
         font-weight: 500;
       }
     </style>
-
-    <script src="https://js.hcaptcha.com/1/api.js?recaptchacompat=off" async defer></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <main>
       <br /><br /><br />
       <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
-          
         <h1 class="bold">Secure File Upload</h1>
         <div class="uk-width-4-5@m uk-margin-auto">
           <p class="lead bold">당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</p>
         </div>
         <div style="margin-top: 80px;"></div>
         
-        <form action="/post" method="post" id="form" enctype="multipart/form-data" onsubmit="captcha_check()">
-          <div class="uk-margin">
-              <div uk-form-custom="target: true">
-                  <input type="file" name="file" required/>
-                  <input class="uk-input uk-form-width-large" type="text" placeholder="Select file" disabled />
-                  <button class="uk-button uk-button-default" type="button" tabIndex="-1">Select</button>
-              </div>
-          </div>
+        <p class="headline" style="text-align: center;">
+            
+            🚧 서버 점검 중... 🚧<br><br>
 
-          <div style="margin-top: 40px;"></div>
+            원활한 서비스 운영을 위해 개발자가 서버를 점검하고 있으니<br>
+            조금만 기다려주세요! ⚡<br><br>
 
-          <div class="uk-margin">
-            <input class="uk-input uk-form-width-large notosanskr" type="password" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" autoComplete="off" required />
-          </div>
+            🚥 점검 일정: XXXX년 XX월 XX일 오전/오후 XX시 XX분 ~ 오전/오후 XX시 XX분<br>
+            🚥 점검 개요: 원활한 서비스 운영을 위한 사이트 업데이트<br><br>
 
-          <div style="margin-top: 30px;"></div>
-          
-          <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
+            🚨 점검 일정은 점검 현황에 따라 변동 될 수 있습니다.
+        
+        </p>
 
-          <div style="margin-top: 30px;"></div>
-
-          <button class="uk-button uk-button-secondary" type="submit">GO!</button>
-        </form>
+        <div style="margin-top: 50px;"></div>
+        <a href="javascript:;" class="uk-button uk-button-secondary" onclick="location.reload();">새로고침 하기</a>
       </div>
     </main>
 
@@ -107,9 +96,6 @@
         <div class="uk-width-4-5@m uk-margin-auto">
           <span class="uk-text-small uk-text-center">Backend with <span class="heart">❤</span> in <a href="https://vfnets.com">FSanchir</span></a></span> | 
           <span class="uk-text-small uk-text-center">Frontend with <span class="heart">❤</span> in <a href="https://sskate.me">SSKATE</span></a></span>
-        </div>
-        <div class="uk-width-4-5@m uk-margin-auto">
-          <span class="uk-text-small uk-text-center">Server Version: {{--VERSION--}}</span>
         </div>
       </div>
     </footer>
@@ -129,22 +115,8 @@
         if (useragent && useragent.Agent && useragent.Agent.isIE) {
           window.requestAnimationFrame = window.requestAnimationFrame.bind(window);
         }
-
-        console.log("Server Version: {{--VERSION--}}")
       })(undefined);
-
-      function captcha_check() {
-        if (document.body.querySelector('#form textarea').value != '') {
-          document.body.querySelector("#form").submit();
-        } else {
-          event.preventDefault();
-          Swal.fire({
-            text: '캡챠를 진행하지 않았습니다.\n캡챠를 진행해 주시기 바랍니다.',
-            icon: 'error'
-          })
-        }
-      }
-
+      
     </script>
   </body>
 </html>

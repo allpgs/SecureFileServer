@@ -72,7 +72,7 @@
         <div style="margin-top: 80px;"></div>
         
         <p class="headline">
-        정상적으로 저장 되었습니다.<br/><br/>
+        성공적으로 저장 되었습니다.<br/><br/>
         <a href="/{{--File--}}">{{--File--}}</a>
         </p>
         <div style="margin-top: 80px;"></div>
@@ -87,6 +87,10 @@
           <span class="uk-text-small uk-text-center">Backend with <span class="heart">❤</span> in <a href="https://vfnets.com">FSanchir</span></a></span> | 
           <span class="uk-text-small uk-text-center">Frontend with <span class="heart">❤</span> in <a href="https://sskate.me">SSKATE</span></a></span>
         </div>
+        <div class="uk-width-4-5@m uk-margin-auto">
+          <span class="uk-text-small uk-text-center">Server Version: {{--VERSION--}}</span>
+        </div>
+      </div>
     </footer>
 
     <script>
@@ -104,6 +108,8 @@
         if (useragent && useragent.Agent && useragent.Agent.isIE) {
           window.requestAnimationFrame = window.requestAnimationFrame.bind(window);
         }
+
+        console.log("Server Version: {{--VERSION--}}")
       })(undefined);
 
     </script>
