@@ -30,7 +30,6 @@ with open("./html/notice/view.html", "r", encoding="utf-8") as f:
 with open("./html/notice/list.json", "r", encoding="utf-8") as f:
     notice_list = f.read()
 
-
 @tasks.loop(seconds=60)
 async def HtmlCacheTask():
     global main_html
