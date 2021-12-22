@@ -9,7 +9,7 @@ import os
 from captcha_check import captcha_check
 from ext.FileManager import FileManager as fm
 
-__VERSION__ = "1.2"
+__VERSION__ = "1.2.1"
 
 app = web.Application(client_max_size=max_bytes)
 routes = web.RouteTableDef()
@@ -29,6 +29,8 @@ with open("./html/notice/view.html", "r", encoding="utf-8") as f:
     notice_html = f.read()
 with open("./html/notice/list.json", "r", encoding="utf-8") as f:
     notice_list = f.read()
+with open("./html/notice/important.html", "r", encoding="utf-8") as f:
+    notice_important_html = f.read()
 
 @tasks.loop(seconds=60)
 async def HtmlCacheTask():
@@ -72,6 +74,10 @@ async def notice_page(request):
 @routes.get("/notice/list.json")
 async def notice_json(request):
     return web.Response(text=notice_list, content_type="text/json")
+
+@routes.get("/notice/important.html")
+async def notice_important(request):
+    return web.Response(text=notice_important_html, content_type="text/html")
 
 @routes.get("/{file_name}")
 async def get_file(request: web.Request):
