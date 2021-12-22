@@ -17,20 +17,26 @@ FileManager = fm()
 total_size = 0
 
 with open("./html/form.html", "r", encoding="utf-8") as f:
-    _main_html = f.read()
+    _main_html = f.read().replace("{{--VERSION--}}", __VERSION__)
     main_html = _main_html
+
 with open("./html/image_dec_form.html", "r", encoding="utf-8") as f:
-    dec_html = f.read()
+    dec_html = f.read().replace("{{--VERSION--}}", __VERSION__)
+
 with open("./html/upload.html", "r", encoding="utf-8") as f:
-    uploaded_html = f.read()
+    uploaded_html = f.read().replace("{{--VERSION--}}", __VERSION__)
+
 with open("./html/error.html", "r", encoding="utf-8") as f:
-    error_html = f.read()
+    error_html = f.read().replace("{{--VERSION--}}", __VERSION__)
+
 with open("./html/notice/view.html", "r", encoding="utf-8") as f:
-    notice_html = f.read()
+    notice_html = f.read().replace("{{--VERSION--}}", __VERSION__)
+
 with open("./html/notice/list.json", "r", encoding="utf-8") as f:
-    notice_list = f.read()
+    notice_list = f.read().replace("{{--VERSION--}}", __VERSION__)
+
 with open("./html/notice/important.html", "r", encoding="utf-8") as f:
-    notice_important_html = f.read()
+    notice_important_html = f.read().replace("{{--VERSION--}}", __VERSION__)
 
 @tasks.loop(seconds=60)
 async def HtmlCacheTask():
@@ -41,10 +47,10 @@ async def HtmlCacheTask():
 
 HtmlCacheTask.start()
 
-HTTPNotFound = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "404 Not Found<br><br>다시 한 번 확인해 주세요! 지금 입력하신 주소의 페이지 혹은 파일은 더 이상 존재하지 않거나 다른 주소로 변경되었어요. 입력한 주소를 다시 한 번 확인해 주세요.").replace("{{--VERSION--}}", __VERSION__), content_type="text/html")
-HTTPBadRequest = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "400 Bad Request<br><br>서버가 이해할 수 없는 요청을 받았습니다. 정상적인 요청인지 확인하시고 다시 시도해 주세요.").replace("{{--VERSION--}}", __VERSION__), content_type="text/html")
-HTTPSorryTotalSizeLimited = web.HTTPNotAcceptable(text=error_html.replace("{{--Error--}}", "죄송합니다. 서버에서 설정한 최대 용량을 초과했습니다. 며칠 후 다시 시도해 주세요.").replace("{{--VERSION--}}", __VERSION__), content_type="text/html")
-HTTPPasswordMismatch = web.HTTPNotAcceptable(text=error_html.replace("{{--Error--}}", "비밀번호가 틀립니다. 올바른 비밀번호인지 확인하시고 다시 시도해 주세요.").replace("{{--VERSION--}}", __VERSION__), content_type="text/html")
+HTTPNotFound = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "404 Not Found<br><br>다시 한 번 확인해 주세요! 지금 입력하신 주소의 페이지 혹은 파일은 더 이상 존재하지 않거나 다른 주소로 변경되었어요. 입력한 주소를 다시 한 번 확인해 주세요."), content_type="text/html")
+HTTPBadRequest = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "400 Bad Request<br><br>서버가 이해할 수 없는 요청을 받았습니다. 정상적인 요청인지 확인하시고 다시 시도해 주세요."), content_type="text/html")
+HTTPSorryTotalSizeLimited = web.HTTPNotAcceptable(text=error_html.replace("{{--Error--}}", "죄송합니다. 서버에서 설정한 최대 용량을 초과했습니다. 며칠 후 다시 시도해 주세요."), content_type="text/html")
+HTTPPasswordMismatch = web.HTTPNotAcceptable(text=error_html.replace("{{--Error--}}", "비밀번호가 틀립니다. 올바른 비밀번호인지 확인하시고 다시 시도해 주세요."), content_type="text/html")
 
 def add_size(size: int):
     global total_size
@@ -60,16 +66,17 @@ print(f"Total size: {round(total_size/1024/1024)}MB")
 @routes.get("/")
 async def main_page(request):
     return web.Response(
-        text=main_html.replace("{{--VERSION--}}", __VERSION__),
+        text=main_html,
         content_type="text/html")
 
 @routes.get("/notice/view")
-async def notice_page(request):
+async def notice_page(request: web.Request):
     params = request.rel_url.query
+
     try:
-        return web.Response(text=notice_html.replace("{{--VERSION--}}", __VERSION__).replace("{{--PARAMS--}}", params['id']), content_type="text/html")
+        return web.Response(text=notice_html.replace("{{--PARAMS--}}", params['id']), content_type="text/html")
     except:
-        return web.Response(text=notice_html.replace("{{--VERSION--}}", __VERSION__).replace("{{--PARAMS--}}", ""), content_type="text/html")
+        return web.Response(text=notice_html.replace("{{--PARAMS--}}", ""), content_type="text/html")
 
 @routes.get("/notice/list.json")
 async def notice_json(request):
@@ -99,8 +106,7 @@ async def get_file(request: web.Request):
         return web.Response(
             text=dec_html
                 .replace("{{--File--}}", file_name)
-                .replace("{{--Searches--}}", str(FileManager.get_seaches(file_name))) 
-                .replace("{{--VERSION--}}", __VERSION__),
+                .replace("{{--Searches--}}", str(FileManager.get_seaches(file_name))),
             content_type="text/html")
     else:
         return HTTPNotFound
@@ -233,7 +239,7 @@ async def file_upload(request: web.Request):
     add_size(path.getsize(f"./files/{generated_filename}"))
     
     await FileManager.addfile(generated_filename, IP)
-    return web.Response(text=uploaded_html.replace("{{--File--}}", generated_filename).replace("{{--VERSION--}}", __VERSION__), content_type="text/html")
+    return web.Response(text=uploaded_html.replace("{{--File--}}", generated_filename), content_type="text/html")
     
 
 
