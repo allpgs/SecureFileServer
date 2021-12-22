@@ -1,5 +1,6 @@
 from Crypto.Cipher import AES
 from aiohttp import web, web_request
+from discord.ext import tasks
 from tools import *
 from config import *
 import aiofiles
@@ -7,7 +8,6 @@ from os import path
 import os
 from captcha_check import captcha_check
 from ext.FileManager import FileManager as fm
-import sys
 
 __VERSION__ = "1.2"
 
@@ -17,7 +17,8 @@ FileManager = fm()
 total_size = 0
 
 with open("./html/form.html", "r", encoding="utf-8") as f:
-    main_html = f.read()
+    _main_html = f.read()
+    main_html = _main_html
 with open("./html/image_dec_form.html", "r", encoding="utf-8") as f:
     dec_html = f.read()
 with open("./html/upload.html", "r", encoding="utf-8") as f:
@@ -28,6 +29,16 @@ with open("./html/notice/view.html", "r", encoding="utf-8") as f:
     notice_html = f.read()
 with open("./html/notice/list.json", "r", encoding="utf-8") as f:
     notice_list = f.read()
+
+
+@tasks.loop(seconds=60)
+async def HtmlCacheTask():
+    global main_html
+
+    await FileManager.wait_until_ready()
+    main_html = _main_html.replace("{{--TotalDownloads--}}", FileManager.total_searches_str()).replace("{{--TotalFileAmount--}}", str(len(os.listdir("./files")))).replace("{{--TotalSize--}}", str(round(total_size/1024/1024)))
+
+HtmlCacheTask.start()
 
 HTTPNotFound = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "404 Not Found<br><br>다시 한 번 확인해 주세요! 지금 입력하신 주소의 페이지 혹은 파일은 더 이상 존재하지 않거나 다른 주소로 변경되었어요. 입력한 주소를 다시 한 번 확인해 주세요.").replace("{{--VERSION--}}", __VERSION__), content_type="text/html")
 HTTPBadRequest = web.HTTPBadRequest(text=error_html.replace("{{--Error--}}", "400 Bad Request<br><br>서버가 이해할 수 없는 요청을 받았습니다. 정상적인 요청인지 확인하시고 다시 시도해 주세요.").replace("{{--VERSION--}}", __VERSION__), content_type="text/html")
@@ -47,7 +58,9 @@ print(f"Total size: {round(total_size/1024/1024)}MB")
 
 @routes.get("/")
 async def main_page(request):
-    return web.Response(text=main_html.replace("{{--VERSION--}}", __VERSION__), content_type="text/html")
+    return web.Response(
+        text=main_html.replace("{{--VERSION--}}", __VERSION__),
+        content_type="text/html")
 
 @routes.get("/notice/view")
 async def notice_page(request):
@@ -73,8 +86,9 @@ async def get_file(request: web.Request):
         await FileManager.delete_expired()
         await app.shutdown()
         await app.cleanup()
+
         print("End.")
-        sys.exit(0)
+        return web.Response(text="Server Shutdown command received. Shutting down...", content_type="text/html")
     
     if path.exists(f"./files/{file_name}"):
         return web.Response(
