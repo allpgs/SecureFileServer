@@ -1,6 +1,6 @@
 from aiohttp import web
 
-__VERSION__ = "1.2"
+__VERSION__ = "1.2.3"
 
 app = web.Application()
 routes = web.RouteTableDef()

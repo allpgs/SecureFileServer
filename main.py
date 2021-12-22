@@ -9,7 +9,7 @@ import os
 from captcha_check import captcha_check
 from ext.FileManager import FileManager as fm
 
-__VERSION__ = "1.2.2"
+__VERSION__ = "1.2.3"
 
 app = web.Application(client_max_size=max_bytes)
 routes = web.RouteTableDef()
