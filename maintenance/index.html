@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <title>{{--File--}} 파일 복호화 : Secure File Upload</title>
-    <meta name="description" content="파일 복호화: {{--File--}}\n관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
-    <meta id="embed-title" property="og:title" content="파일 복호화 : Secure File Upload" />
-    <meta id="embed-desc" property="og:description" content="파일 복호화: {{--File--}}\n관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
+    <title>서버 점검 중 : Secure File Upload</title>
+    <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
+    <meta id="embed-title" property="og:title" content="서버 점검 중 : Secure File Upload" />
+    <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,7 +42,7 @@
       .nanumsquare * { 
         font-family: 'NanumSquare' !important; 
       }
-      
+
       ::-moz-selection {
         color: #000000;
         background: #F0F8FF;
@@ -61,41 +61,33 @@
         font-weight: 500;
       }
     </style>
-
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
   </head>
   <body>
     <main>
       <br /><br /><br />
       <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
-          
         <h1 class="bold">Secure File Upload</h1>
         <div class="uk-width-4-5@m uk-margin-auto">
           <p class="lead bold">당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</p>
         </div>
-
-        <div include="./notice/important.html"></div>
-
-        <div style="margin-top: 40px;"></div>
-        <h3 class="headline">
-          파일 {{--File--}}의 비밀번호를 입력하세요. ({{--Searches--}} Downloads)
-        </h3>
-        <div style="margin-top: 40px;"></div>
+        <div style="margin-top: 80px;"></div>
         
-        <form action="/{{--File--}}" method="post" onsubmit="captcha_check()">
+        <p class="headline" style="text-align: center;">
+            
+            🚧 서버 점검 중... 🚧<br><br>
 
-          <div class="uk-margin">
-            <input class="uk-input uk-form-width-large notosanskr" type="password" placeholder="비밀번호 (서버에도 저장되지 않아 분실 시 복구가 불가능 합니다.)" name="password" autoComplete="off" required />
-          </div>
+            원활한 서비스 운영을 위해 개발자가 서버를 점검하고 있으니<br>
+            조금만 기다려주세요! ⚡<br><br>
 
-          <div style="margin-top: 30px;"></div>
-          
-          <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
+            🚥 점검 일정: XXXX년 XX월 XX일 오전/오후 XX시 XX분 ~ 오전/오후 XX시 XX분<br>
+            🚥 점검 개요: 원활한 서비스 운영을 위한 사이트 업데이트<br><br>
 
-          <div style="margin-top: 30px;"></div>
+            🚨 점검 일정은 점검 현황에 따라 변동 될 수 있습니다.
+        
+        </p>
 
-          <button class="uk-button uk-button-secondary" type="submit">복호화</button>
-        </form>
+        <div style="margin-top: 50px;"></div>
+        <a href="javascript:;" class="uk-button uk-button-secondary" onclick="location.reload();">새로고침 하기</a>
       </div>
     </main>
 
@@ -103,11 +95,8 @@
       <br/><br/>
       <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
         <div class="uk-width-4-5@m uk-margin-auto">
-          <span class="uk-text-small uk-text-center">Backend with <span class="heart">❤</span> in <a href="https://github.com/fsanchir">FSanchir</span></a></span> | 
+          <span class="uk-text-small uk-text-center">Backend with <span class="heart">❤</span> in <a href="https://vfnets.com">FSanchir</span></a></span> | 
           <span class="uk-text-small uk-text-center">Frontend with <span class="heart">❤</span> in <a href="https://sskate.me">SSKATE</span></a></span>
-        </div>
-        <div class="uk-width-4-5@m uk-margin-auto">
-          <span class="uk-text-small uk-text-center">Server Version: {{--VERSION--}}</span>
         </div>
       </div>
     </footer>
@@ -127,52 +116,8 @@
         if (useragent && useragent.Agent && useragent.Agent.isIE) {
           window.requestAnimationFrame = window.requestAnimationFrame.bind(window);
         }
-
-        console.log("Server Version: {{--VERSION--}}")
       })(undefined);
-
-      function captcha_check() {
-        if (document.body.querySelector('#form textarea').value != '') {
-          document.body.querySelector("#form").submit();
-        } else {
-          event.preventDefault();
-          Swal.fire({
-            text: '캡챠를 진행하지 않았습니다.\n캡챠를 진행해 주시기 바랍니다.',
-            icon: 'error'
-          })
-        }
-      }
       
-      function includeHTML() {
-        var z, i, elmnt, file, xhttp;
-        /* Loop through a collection of all HTML elements: */
-        z = document.getElementsByTagName("*");
-        for (i = 0; i < z.length; i++) {
-          elmnt = z[i];
-          /*search for elements with a certain atrribute:*/
-          file = elmnt.getAttribute("include");
-          if (file) {
-            /* Make an HTTP request using the attribute value as the file name: */
-            xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-              if (this.readyState == 4) {
-                if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-                if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
-                /* Remove the attribute, and call this function once more: */
-                elmnt.removeAttribute("include");
-                includeHTML();
-              }
-            }
-            xhttp.open("GET", file, true);
-            xhttp.send();
-            /* Exit the function: */
-            return;
-          }
-        }
-      }
-
-      window.addEventListener('load', includeHTML)
-
     </script>
   </body>
 </html>

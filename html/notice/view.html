@@ -1,10 +1,22 @@
+<!--
+  공지사항은 list.json에서
+
+  {
+    "id": 공지사항 번호,
+    "title": 제목,
+    "content": 내용
+  }
+
+  이렇게 작성 해 주시면 됩니다.
+-->
+            
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <title>Secure File Upload</title>
-    <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 무료 오픈소스 파일 암호화 서비스" />
-    <meta id="embed-title" property="og:title" content="Secure File Upload" />
-    <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 무료 오픈소스 파일 암호화 서비스" />
+    <title>공지사항 : Secure File Upload</title>
+    <meta name="description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
+    <meta id="embed-title" property="og:title" content="공지사항 : Secure File Upload" />
+    <meta id="embed-desc" property="og:description" content="관리자도 파일 비밀번호/확인을 할 수 없는 안전한 오픈소스 파일 암호화 서비스" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +24,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
@@ -61,50 +74,23 @@
         font-weight: 500;
       }
     </style>
-
-    <script src="https://js.hcaptcha.com/1/api.js?recaptchacompat=off" async defer></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <main>
       <br /><br /><br />
       <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
-          
         <h1 class="bold">Secure File Upload</h1>
         <div class="uk-width-4-5@m uk-margin-auto">
           <p class="lead bold">당신의 파일, 누구도 볼 수 없게 안전하게 보호되는. 대단한!</p>
-          <p class="lead bold">
-            서버 총 다운로드 수: <b>{{--TotalDownloads--}}</b>
-            <br>
-            14일 내에 업로드 된 파일 수: <b>{{--TotalFileAmount--}}</b>개 (<b>{{--TotalSize--}}</b>MB)</p>
-
-          <div include="./notice/important.html"></div>
         </div>
+
+        <div include="../notice/important.html"></div>
+
         <div style="margin-top: 80px;"></div>
         
-        <form action="/post" method="post" id="form" enctype="multipart/form-data" onsubmit="captcha_check()">
-          <div class="uk-margin">
-              <div uk-form-custom="target: true">
-                  <input type="file" name="file" required/>
-                  <input class="uk-input uk-form-width-large" type="text" placeholder="Select file" disabled />
-                  <button class="uk-button uk-button-default" type="button" tabIndex="-1">Select</button>
-              </div>
-          </div>
+        <p class="headline"></p>
 
-          <div style="margin-top: 40px;"></div>
-
-          <div class="uk-margin">
-            <input class="uk-input uk-form-width-large notosanskr" type="password" placeholder="비밀번호 (영문 및 숫자만 가능)" name="password" autoComplete="off" required />
-          </div>
-
-          <div style="margin-top: 30px;"></div>
-          
-          <div class="h-captcha" data-sitekey="19bc3e4d-d97a-42c8-88ed-53a1e7178674"></div>
-
-          <div style="margin-top: 30px;"></div>
-
-          <button class="uk-button uk-button-secondary" type="submit">GO!</button>
-        </form>
+        <div style="margin-top: 30px;"></div>
       </div>
     </main>
 
@@ -112,7 +98,7 @@
       <br/><br/>
       <div class="uk-container uk-container-small uk-flex-auto uk-text-center">
         <div class="uk-width-4-5@m uk-margin-auto">
-          <span class="uk-text-small uk-text-center">Backend with <span class="heart">❤</span> in <a href="https://github.com/fsanchir">FSanchir</span></a></span> | 
+          <span class="uk-text-small uk-text-center">Backend with <span class="heart">❤</span> in <a href="https://vfnets.com">FSanchir</span></a></span> | 
           <span class="uk-text-small uk-text-center">Frontend with <span class="heart">❤</span> in <a href="https://sskate.me">SSKATE</span></a></span>
         </div>
         <div class="uk-width-4-5@m uk-margin-auto">
@@ -122,6 +108,16 @@
     </footer>
 
     <script>
+
+      function showNotice(id) {
+        $("#notice_"+id).show();
+        $(".notice_nav").hide();
+      }
+
+      function hideNotice(id) {
+        $("#notice_"+id).hide();
+        $(".notice_nav").show();
+      }
 
       (function (useragent) {
         if (!window.isShowWarning && window.parent === window.self) {
@@ -140,17 +136,35 @@
         console.log("Server Version: {{--VERSION--}}")
       })(undefined);
 
-      function captcha_check() {
-        if (document.body.querySelector('#form textarea').value != '') {
-          document.body.querySelector("#form").submit();
-        } else {
-          event.preventDefault();
-          Swal.fire({
-            text: '캡챠를 진행하지 않았습니다.\n캡챠를 진행해 주시기 바랍니다.',
-            icon: 'error'
-          })
-        }
-      }
+      (function () {
+        history.pushState(null,null,'view')
+
+        // ajax() 이용 JSON 통신
+        $.ajax({
+          // 요청 URL
+          url: './list.json',
+          // 전송방식(GET/POST)				
+            type: 'GET',		  	
+            // 데이터 유형(생략시 자동 판단)
+            dataType: 'json',
+            // 요청 성공시 result에 data 추가
+          success: function (data) {
+            //$('#result').append(data);
+            console.log(data)
+            for (var i = 0; i < data.length; i++) {
+              $(".headline").append(`<a href="javascript:;" class="notice_nav" onclick="showNotice(${data[i].id});"><li>${data[i].title}</li></a>`)
+              $(".headline").append(`
+  <div id="notice_${data[i].id}" style="display: none;">
+    <!-- 제목: {${data[i].title} -->
+    ${data[i].content}
+    <br/><br/>
+    <a href="javascript:;" class="uk-button uk-button-secondary" onclick="hideNotice(${data[i].id});">목록</a>
+  </div>
+              `);
+            }
+          }
+        });		
+      })(jQuery);
       
       function includeHTML() {
         var z, i, elmnt, file, xhttp;
@@ -180,7 +194,12 @@
         }
       }
 
-      window.addEventListener('load', includeHTML)
+      window.addEventListener('load', function() {
+        if ("{{--PARAMS--}}" != "") {
+          showNotice({{--PARAMS--}});
+        }
+        includeHTML();
+      })
 
     </script>
   </body>
